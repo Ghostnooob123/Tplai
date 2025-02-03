@@ -1,6 +1,6 @@
 #include "Tplai.h"
 
-int main()
+int WinMain()
 {
 
 	Tplai tplai;

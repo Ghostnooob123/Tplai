@@ -7,10 +7,10 @@
 #include <iostream>
 #include <stack>
 #include <filesystem>
-#include <memory>
-#include <set>
+#include <string>
 #include <locale>
 
+const int8_t volumeMax = 5;
 const std::set<std::string> validExtensions = { ".ogg", ".mp3", ".wav", ".flac", ".aac", ".m4a" };
 
 namespace fs = std::filesystem;
@@ -32,6 +32,7 @@ private:
 	sf::RenderWindow* _window;
 
 	sf::Music _currM;
+
 	sf::Event _event;
 
 	sf::Vector2f _mousePos;
@@ -42,17 +43,32 @@ private:
 	void updateMousePos();
 	void pollEvents();
 
-	void reload();
 	void play();
 
-	std::shared_ptr< std::set<std::string>> _knownFiles;
 	std::stack<std::string> _lastFiles;
-	//std::set<std::string>::iterator it;
+	sf::RectangleShape _volume[volumeMax];
+	int8_t _volumeSetting;
+	float _currVolume;
+	sf::RectangleShape _V_Up; // Volume Up
+	sf::RectangleShape _V_Dw; // Volume Down
 
-	sf::Font font;
+	std::string _filePath;
+
+	sf::Font _font;
+	sf::Text _display_CurrM;
+	sf::Text _display_Dur;
+
+	bool isLeftMousePressed = false;
+
+	sf::RectangleShape _P_Button; // Pause
+	sf::RectangleShape _N_Button; // Next
+	sf::RectangleShape _B_Button; // Back
+
+	sf::RectangleShape _panel;
 
 	bool _startM;
 	bool _repeat;
+	bool _back = false;
 
 	void initWindow();
 	void initTplai();
