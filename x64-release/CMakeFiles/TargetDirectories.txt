@@ -1,0 +1,3 @@
+D:/Visual Studio/Tplai/out/build/x64-release/CMakeFiles/Tplai.dir
+D:/Visual Studio/Tplai/out/build/x64-release/CMakeFiles/edit_cache.dir
+D:/Visual Studio/Tplai/out/build/x64-release/CMakeFiles/rebuild_cache.dir
