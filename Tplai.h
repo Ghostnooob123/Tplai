@@ -5,10 +5,12 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+
 #include <stack>
 #include <filesystem>
 #include <string>
 #include <locale>
+#include <windows.h>
 
 const int8_t volumeMax = 5;
 const std::set<std::string> validExtensions = { ".ogg", ".mp3", ".wav", ".flac", ".aac", ".m4a" };
@@ -21,7 +23,6 @@ class Tplai
 public:
 	Tplai();
 	~Tplai();
-
 
 	bool running();
 
@@ -66,12 +67,20 @@ private:
 
 	sf::RectangleShape _panel;
 
+	sf::RectangleShape _addM;
+
+	void OpenFileExplorer();
+
 	bool _startM;
 	bool _repeat;
 	bool _back = false;
 
 	void initWindow();
 	void initTplai();
+	void initPanel();
+	void initB();
+	void initV();
+	void initFileOp();
 };
 
 #endif // !TPLAI_H

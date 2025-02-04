@@ -1,6 +1,6 @@
 #include "Tplai.h"
 
-int WinMain()
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 
 	Tplai tplai;
