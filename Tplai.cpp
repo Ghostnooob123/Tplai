@@ -37,8 +37,6 @@ void Tplai::update()
         this->_startM = true;
         this->play();
     }
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(16)); // ~60 FPS
 }
 
 void Tplai::render()
@@ -64,7 +62,7 @@ void Tplai::render()
     }
 
     this->_window->display();
-    std::this_thread::sleep_for(std::chrono::milliseconds(16)); // ~60 FPS
+
 }
 
 void Tplai::updateMousePos()
@@ -243,6 +241,10 @@ void Tplai::play()
             this->render();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        if (!this->running())
+        {
+            return;
+        }
     }
     _startM = false;
 }
