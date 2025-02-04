@@ -37,6 +37,8 @@ void Tplai::update()
         this->_startM = true;
         this->play();
     }
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(16)); // ~60 FPS
 }
 
 void Tplai::render()
@@ -62,6 +64,7 @@ void Tplai::render()
     }
 
     this->_window->display();
+    std::this_thread::sleep_for(std::chrono::milliseconds(16)); // ~60 FPS
 }
 
 void Tplai::updateMousePos()
@@ -169,102 +172,98 @@ void Tplai::pollEvents()
 
 void Tplai::play()
 {
-    try {
-        std::setlocale(LC_ALL, "en_US.UTF-8");
+    std::setlocale(LC_ALL, "en_US.UTF-8");
 
-        for (const auto& entry : fs::directory_iterator(folderPath)) {
-            if (!entry.is_regular_file()) {
-                continue;
-            }
-            std::string ext = entry.path().extension().string();
-            if (validExtensions.find(ext) == validExtensions.end()) {
-                continue;
-            }
+    for (const auto& entry : fs::directory_iterator(folderPath)) {
+        std::string ext = entry.path().extension().string();
+        if (!entry.is_regular_file() || validExtensions.find(ext) == validExtensions.end()) {
+            continue;
+        }
 
-            if (this->_back)
+        if (this->_back)
+        {
+            if (this->_lastFiles.size() == 1)
             {
-                if (this->_lastFiles.size() == 1)
+                if (!this->_lastFiles.empty() && entry.path().string() != this->_lastFiles.top())
                 {
-                    if (!this->_lastFiles.empty() && entry.path().string() != this->_lastFiles.top())
-                    {
-                        continue;
-                    }
-                    this->_filePath = entry.path().string();
-                    this->_back = false;
+                    continue;
                 }
-                else
-                {
-                    if (!this->_lastFiles.empty() && entry.path().string() != this->_lastFiles.top())
-                    {
-                        continue;
-                    }
-                    this->_filePath = entry.path().string();
-                    this->_lastFiles.pop();
-                    this->_back = false;
-                }
+                this->_filePath = entry.path().string();
+                this->_back = false;
             }
             else
             {
-                this->_filePath = entry.path().string();
-            }
-
-            std::string _displayFile = this->_filePath.substr(6, this->_filePath.length() - 10);
-            for (auto& c : _displayFile)
-            {
-                if (!std::isprint(c))
+                if (!this->_lastFiles.empty() && entry.path().string() != this->_lastFiles.top())
                 {
-                    c = '.';
+                    continue;
                 }
-            }
-            if (_displayFile.length() > 18)
-            {
-                _displayFile = _displayFile.substr(0, 18);
-                _displayFile += "...";
-                this->_display_CurrM.setString(_displayFile.substr(1,3));
-            }
-            this->_display_CurrM.setString(_displayFile);
-
-            this->_currM.openFromFile(this->_filePath);
-            this->_currM.play();
-
-            this->_lastFiles.push(this->_filePath);
-
-            sf::Time totalDuration = this->_currM.getDuration();
-            int totalSeconds = static_cast<int>(totalDuration.asSeconds());
-            int totalMinutes = totalSeconds / 60;
-            totalSeconds %= 60;
-
-            while (this->_currM.getStatus() == sf::Music::Playing ||
-                this->_currM.getStatus() == sf::Music::Paused)
-            {
-
-                this->_currM.setVolume(this->_currVolume);
-
-                sf::Time currentTime = this->_currM.getPlayingOffset();
-                int currSeconds = static_cast<int>(currentTime.asSeconds());
-                int currMinutes = currSeconds / 60;
-                currSeconds %= 60;
-
-                std::string curDur = std::to_string(currMinutes) + ":" +
-                    (currSeconds < 10 ? "0" : "") + std::to_string(currSeconds) +
-                    " - " + std::to_string(totalMinutes) + ":" +
-                    (totalSeconds < 10 ? "0" : "") + std::to_string(totalSeconds);
-
-                this->_display_Dur.setString(curDur);
-
-                this->update();
-                this->render();
+                this->_filePath = entry.path().string();
+                this->_lastFiles.pop();
+                this->_back = false;
             }
         }
-        _startM = false;
+        else
+        {
+            this->_filePath = entry.path().string();
+        }
+
+        std::string _displayFile = this->_filePath.substr(6, this->_filePath.length() - 10);
+        _displayFile = this->DisplayFix(_displayFile);
+
+        this->_display_CurrM.setString(_displayFile);
+
+        this->_currM.openFromFile(this->_filePath);
+        this->_currM.play();
+
+        this->_lastFiles.push(this->_filePath);
+
+        sf::Time totalDuration = this->_currM.getDuration();
+        int totalSeconds = static_cast<int>(totalDuration.asSeconds());
+        int totalMinutes = totalSeconds / 60;
+        totalSeconds %= 60;
+
+        while (this->_currM.getStatus() == sf::Music::Playing ||
+            this->_currM.getStatus() == sf::Music::Paused)
+        {
+            this->_currM.setVolume(this->_currVolume);
+
+            sf::Time currentTime = this->_currM.getPlayingOffset();
+            int currSeconds = static_cast<int>(currentTime.asSeconds());
+            int currMinutes = currSeconds / 60;
+            currSeconds %= 60;
+
+            std::string curDur = std::to_string(currMinutes) + ":" +
+                (currSeconds < 10 ? "0" : "") + std::to_string(currSeconds) +
+                " - " + std::to_string(totalMinutes) + ":" +
+                (totalSeconds < 10 ? "0" : "") + std::to_string(totalSeconds);
+
+            this->_display_Dur.setString(curDur);
+
+            this->update();
+            this->render();
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-    catch (const fs::filesystem_error& e) {
-        std::cerr << "Filesystem error: " << e.what() << std::endl;
+    _startM = false;
+}
+
+std::string Tplai::DisplayFix(std::string& _disFile)
+{
+    for (auto& c : _disFile)
+    {
+        if (!std::isprint(c))
+        {
+            c = '.';
+        }
     }
-    catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+    if (_disFile.length() > 18)
+    {
+        _disFile = _disFile.substr(0, 18);
+        _disFile += "...";
+        this->_display_CurrM.setString(_disFile.substr(1, 3));
     }
 
+    return _disFile;
 }
 
 void Tplai::OpenFileExplorer()

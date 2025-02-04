@@ -11,6 +11,8 @@
 #include <string>
 #include <locale>
 #include <windows.h>
+#include <thread>
+#include <atomic>
 
 const int8_t volumeMax = 5;
 const std::set<std::string> validExtensions = { ".ogg", ".mp3", ".wav", ".flac", ".aac", ".m4a" };
@@ -58,6 +60,7 @@ private:
 	sf::Font _font;
 	sf::Text _display_CurrM;
 	sf::Text _display_Dur;
+	std::string DisplayFix(std::string& _disFile);
 
 	bool isLeftMousePressed = false;
 
