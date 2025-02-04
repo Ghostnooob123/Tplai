@@ -23,14 +23,14 @@ bool Tplai::running()
 
 void Tplai::update()
 {
+    this->updateMousePos();
+    this->pollEvents();
+
     if (!this->running())
     {
         this->_currM.stop();
         return;
     }
-
-    this->updateMousePos();
-    this->pollEvents();
 
     if (!this->_startM)
     {
@@ -62,8 +62,6 @@ void Tplai::render()
     }
 
     this->_window->display();
-    std::this_thread::sleep_for(std::chrono::milliseconds(16));
-
 }
 
 void Tplai::updateMousePos()
@@ -241,10 +239,6 @@ void Tplai::play()
             this->update();
             this->render();
         }
-        if (!this->running())
-        {
-            return;
-        }
     }
     _startM = false;
 }
@@ -276,6 +270,7 @@ void Tplai::OpenFileExplorer()
 void Tplai::initWindow()
 {
     this->_window = new sf::RenderWindow(sf::VideoMode(550, 400), "Tplai", sf::Style::Close);
+    this->_window->setVerticalSyncEnabled(true);
     this->_window->setFramerateLimit(60);
 
     this->_x = this->_window->getSize().x / 2.0f;
