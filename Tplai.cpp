@@ -62,6 +62,7 @@ void Tplai::render()
     }
 
     this->_window->display();
+    std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
 }
 
@@ -240,7 +241,6 @@ void Tplai::play()
             this->update();
             this->render();
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         if (!this->running())
         {
             return;
