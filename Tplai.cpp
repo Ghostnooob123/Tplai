@@ -243,6 +243,10 @@ void Tplai::play()
             this->render();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        if (!this->running())
+        {
+            return;
+        }
     }
     _startM = false;
 }
