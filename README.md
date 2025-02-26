@@ -8,6 +8,8 @@ The program is safe to run but may occur a warning due the fact the program is n
 Find Tplai.exe and run it. To find it navigate to x64-build folder.
 (Program is only compatible with Windows 10-11)
 
+# Supported extensions = { ".ogg", ".mp3", ".wav", ".flac", ".aac", ".m4a" }
+
 ## Dependencies
 
 Simple and Fast Multimedia Library(SFML) is used for this project to happen.
