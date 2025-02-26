@@ -62,8 +62,6 @@ private:
 	sf::Text _display_Dur;
 	std::string DisplayFix(std::string& _disFile);
 
-	bool isLeftMousePressed = false;
-
 	sf::RectangleShape _P_Button; // Pause
 	sf::RectangleShape _N_Button; // Next
 	sf::RectangleShape _B_Button; // Back
@@ -76,7 +74,8 @@ private:
 
 	bool _startM;
 	bool _repeat;
-	bool _back = false;
+	bool _back;
+	bool _isLeftMousePressed;
 
 	sf::Texture P_Texture, N_Texture, B_Texture;
 	sf::Texture V_Up_Texture, V_Dw_Texture, Add_Texture, V_Mute_Texture;

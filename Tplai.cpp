@@ -78,13 +78,13 @@ void Tplai::pollEvents()
         }
 
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
             this->_N_Button.getGlobalBounds().contains(this->_mousePos)) {
             this->_currM.stop();
-            isLeftMousePressed = true;
+            _isLeftMousePressed = true;
             break;
         }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
             this->_B_Button.getGlobalBounds().contains(this->_mousePos)) {
           
             this->_currM.stop();
@@ -93,10 +93,10 @@ void Tplai::pollEvents()
             {
                 this->_lastFiles.pop();
             }
-            isLeftMousePressed = true;
+            _isLeftMousePressed = true;
             break;
         }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
             this->_P_Button.getGlobalBounds().contains(this->_mousePos)) {
             if (this->_currM.getStatus() == sf::Music::Playing)
             {
@@ -106,7 +106,7 @@ void Tplai::pollEvents()
             {
                 this->_currM.play();
             }
-            isLeftMousePressed = true;
+            _isLeftMousePressed = true;
             break;
         }
 
@@ -120,15 +120,15 @@ void Tplai::pollEvents()
             {
                 this->_currM.play();
             }
-            isLeftMousePressed = true;
+            _isLeftMousePressed = true;
             break;
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
             this->_V_Up.getGlobalBounds().contains(this->_mousePos)) {
             if (this->_currVolume < 100.0f && this->_volumeSetting < 5)
             {
-                isLeftMousePressed = true;
+                _isLeftMousePressed = true;
                 this->_currVolume += 10.0f;
                 this->_volume[this->_volumeSetting++].setFillColor(sf::Color(138, 137, 134));
             }
@@ -138,11 +138,11 @@ void Tplai::pollEvents()
             }
             break;
         }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
             this->_V_Dw.getGlobalBounds().contains(this->_mousePos)) {
             if (this->_currVolume > 0.0f && this->_volumeSetting >= 0)
             {
-                isLeftMousePressed = true;
+                _isLeftMousePressed = true;
                 this->_currVolume -= 10.0f;
                 this->_volume[--this->_volumeSetting].setFillColor(sf::Color::Transparent);
             }
@@ -153,16 +153,16 @@ void Tplai::pollEvents()
             break;
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
             this->_addM.getGlobalBounds().contains(this->_mousePos)) {
             this->OpenFileExplorer();
-            isLeftMousePressed = true;
+            _isLeftMousePressed = true;
             break;
         }
 
         if (this->_event.type == sf::Event::MouseButtonReleased) {
             if (this->_event.mouseButton.button == sf::Mouse::Left) {
-                isLeftMousePressed = false;
+                _isLeftMousePressed = false;
             }
         }
     }
@@ -282,6 +282,8 @@ void Tplai::initTplai()
 {
     this->_startM = false;
     this->_repeat = true;
+    this->_isLeftMousePressed = false;
+    this->_back = false;
 
     this->initV();
 
@@ -300,7 +302,7 @@ void Tplai::initPanel()
     this->_panel.setSize(sf::Vector2f(300.0f, 100.0f));
     this->_panel.setPosition(sf::Vector2f(this->_x - 150.0f, this->_y - 20.0f));
 
-    if (!this->_font.loadFromFile("font.ttf")) {
+    if (!this->_font.loadFromFile("source/font.ttf")) {
         std::cerr << "Error loading font" << std::endl;
     }
 
