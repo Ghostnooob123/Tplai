@@ -73,14 +73,8 @@ void Tplai::updateMousePos()
 void Tplai::pollEvents()
 {
     while (this->_window->pollEvent(this->_event)) {
-        if (sf::Keyboard::Escape == this->_event.key.code)
-        {
-            this->_window->close();
-            break;
-        }
         if (this->_event.type == sf::Event::Closed) {
             this->_window->close();
-            break;
         }
 
 
@@ -138,6 +132,10 @@ void Tplai::pollEvents()
                 this->_currVolume += 10.0f;
                 this->_volume[this->_volumeSetting++].setFillColor(sf::Color(138, 137, 134));
             }
+            if (this->_volumeSetting > 0)
+            {
+                this->_V_Dw.setTexture(&this->V_Dw_Texture);
+            }
             break;
         }
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !isLeftMousePressed &&
@@ -147,6 +145,10 @@ void Tplai::pollEvents()
                 isLeftMousePressed = true;
                 this->_currVolume -= 10.0f;
                 this->_volume[--this->_volumeSetting].setFillColor(sf::Color::Transparent);
+            }
+            if (this->_volumeSetting == 0)
+            {
+                this->_V_Dw.setTexture(&this->V_Mute_Texture);
             }
             break;
         }
@@ -158,7 +160,6 @@ void Tplai::pollEvents()
             break;
         }
 
-        // Release the button ( Prevent from multiple clicks at one time )
         if (this->_event.type == sf::Event::MouseButtonReleased) {
             if (this->_event.mouseButton.button == sf::Mouse::Left) {
                 isLeftMousePressed = false;
@@ -204,7 +205,7 @@ void Tplai::play()
             this->_filePath = entry.path().string();
         }
 
-        std::string _displayFile = this->_filePath.substr(6, this->_filePath.length() - 10);
+        std::string _displayFile = this->_filePath.substr(7, this->_filePath.length() - 10);
         _displayFile = this->DisplayFix(_displayFile);
 
         this->_display_CurrM.setString(_displayFile);
@@ -237,6 +238,7 @@ void Tplai::play()
             this->_display_Dur.setString(curDur);
 
             this->update();
+
             this->render();
         }
     }
@@ -264,7 +266,7 @@ std::string Tplai::DisplayFix(std::string& _disFile)
 
 void Tplai::OpenFileExplorer()
 {
-    ShellExecute(NULL, "open", "explorer.exe", "music", NULL, SW_SHOWNORMAL);
+    ShellExecute(NULL, "open", "explorer.exe", "Tmusic", NULL, SW_SHOWNORMAL);
 }
 
 void Tplai::initWindow()
@@ -316,28 +318,41 @@ void Tplai::initPanel()
     this->_display_Dur.setOutlineThickness(0.5f);
     this->_display_Dur.setOutlineColor(sf::Color::Black);
     this->_display_Dur.setPosition(sf::Vector2f(this->_panel.getPosition().x + 5.0f,
-        this->_panel.getPosition().y + 65.0f));
+    this->_panel.getPosition().y + 65.0f));
 }
 
 void Tplai::initB()
 {
+    if (!this->P_Texture.loadFromFile("source/pause.png")) {
+        std::cerr << "Cant load P_Texture\n";
+    }
+    if (!this->N_Texture.loadFromFile("source/skip.png")) {
+        std::cerr << "Cant load N_Texture\n";
+    }
+    if (!this->B_Texture.loadFromFile("source/back.png")) {
+        std::cerr << "Cant load B_Texture\n";
+    }
+
     this->_P_Button.setFillColor(sf::Color::White);
     this->_P_Button.setOutlineColor(sf::Color::Black);
     this->_P_Button.setOutlineThickness(3.0f);
     this->_P_Button.setSize(sf::Vector2f(90.0f, 50.0f));
     this->_P_Button.setPosition(sf::Vector2f(this->_x - 45.0f, this->_y + 100.0f));
+    this->_P_Button.setTexture(&this->P_Texture);
 
     this->_N_Button.setFillColor(sf::Color::White);
     this->_N_Button.setOutlineColor(sf::Color::Black);
     this->_N_Button.setOutlineThickness(3.0f);
     this->_N_Button.setSize(sf::Vector2f(50.0f, 50.0f));
     this->_N_Button.setPosition(sf::Vector2f(this->_x + 55.0f, this->_y + 100.0f));
+    this->_N_Button.setTexture(&this->N_Texture);
 
     this->_B_Button.setFillColor(sf::Color::White);
     this->_B_Button.setOutlineColor(sf::Color::Black);
     this->_B_Button.setOutlineThickness(3.0f);
     this->_B_Button.setSize(sf::Vector2f(50.0f, 50.0f));
     this->_B_Button.setPosition(sf::Vector2f(this->_x - 105.0f, this->_y + 100.0f));
+    this->_B_Button.setTexture(&this->B_Texture);
 }
 
 void Tplai::initV()
@@ -361,24 +376,40 @@ void Tplai::initV()
     }
     this->_volume[this->_volumeSetting++].setFillColor(sf::Color(138, 137, 134));
 
+    if (!this->V_Up_Texture.loadFromFile("source/up.png")) {
+        std::cerr << "Cant load V_Up_Texture\n";
+    }
+    if (!this->V_Dw_Texture.loadFromFile("source/down.png")) {
+        std::cerr << "Cant load V_Dw_Texture\n";
+    }
+    if (!this->V_Mute_Texture.loadFromFile("source/mute.png")) {
+        std::cerr << "Cant load V_Mute_Texture\n";
+    }
+
     this->_V_Up.setFillColor(sf::Color::White);
     this->_V_Up.setOutlineColor(sf::Color::Black);
     this->_V_Up.setOutlineThickness(3.0f);
     this->_V_Up.setSize(sf::Vector2f(30.0f, 30.0f));
     this->_V_Up.setPosition(sf::Vector2f(this->_x + 220.0f, this->_y + 100.0f));
+    this->_V_Up.setTexture(&this->V_Up_Texture);
 
     this->_V_Dw.setFillColor(sf::Color::White);
     this->_V_Dw.setOutlineColor(sf::Color::Black);
     this->_V_Dw.setOutlineThickness(3.0f);
     this->_V_Dw.setSize(sf::Vector2f(30.0f, 30.0f));
     this->_V_Dw.setPosition(sf::Vector2f(this->_x + 160.0f, this->_y + 100.0f));
+    this->_V_Dw.setTexture(&this->V_Dw_Texture);
 }
 
 void Tplai::initFileOp()
 {
-    this->_addM.setFillColor(sf::Color::White);
-    this->_addM.setOutlineColor(sf::Color::Black);
-    this->_addM.setOutlineThickness(2.3f);
+    if (!Add_Texture.loadFromFile("source/folder.png")) {
+        std::cerr << "Cant load V_Dw_Texture\n";
+    }
+
     this->_addM.setSize(sf::Vector2f(60.0f, 40.0f));
+    this->_addM.setOutlineColor(sf::Color::Black);
+    this->_addM.setOutlineThickness(2.5f);
     this->_addM.setPosition(sf::Vector2f(this->_x - 250.0f, this->_y - 170.0f));
+    this->_addM.setTexture(&this->Add_Texture);
 }

@@ -18,7 +18,7 @@ const int8_t volumeMax = 5;
 const std::set<std::string> validExtensions = { ".ogg", ".mp3", ".wav", ".flac", ".aac", ".m4a" };
 
 namespace fs = std::filesystem;
-const std::string folderPath = "music";
+const std::string folderPath = "Tmusic";
 
 class Tplai
 {
@@ -77,6 +77,9 @@ private:
 	bool _startM;
 	bool _repeat;
 	bool _back = false;
+
+	sf::Texture P_Texture, N_Texture, B_Texture;
+	sf::Texture V_Up_Texture, V_Dw_Texture, Add_Texture, V_Mute_Texture;
 
 	void initWindow();
 	void initTplai();
