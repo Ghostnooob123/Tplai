@@ -101,10 +101,12 @@ void Tplai::pollEvents()
             if (this->_currM.getStatus() == sf::Music::Playing)
             {
                 this->_currM.pause();
+                this->_P_Button.setTexture(&this->Pl_Texture);
             }
             else
             {
                 this->_currM.play();
+                this->_P_Button.setTexture(&this->P_Texture);
             }
             _isLeftMousePressed = true;
             break;
@@ -115,10 +117,12 @@ void Tplai::pollEvents()
             if (this->_currM.getStatus() == sf::Music::Playing)
             {
                 this->_currM.pause();
+                this->_P_Button.setTexture(&this->Pl_Texture);
             }
             else
             {
                 this->_currM.play();
+                this->_P_Button.setTexture(&this->P_Texture);
             }
             _isLeftMousePressed = true;
             break;
@@ -326,6 +330,9 @@ void Tplai::initPanel()
 void Tplai::initB()
 {
     if (!this->P_Texture.loadFromFile("source/pause.png")) {
+        std::cerr << "Cant load P_Texture\n";
+    }
+    if (!this->Pl_Texture.loadFromFile("source/play.png")) {
         std::cerr << "Cant load P_Texture\n";
     }
     if (!this->N_Texture.loadFromFile("source/skip.png")) {
