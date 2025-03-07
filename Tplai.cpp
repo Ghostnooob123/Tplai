@@ -46,6 +46,7 @@ void Tplai::render()
     this->_window->draw(this->_P_Button);
     this->_window->draw(this->_N_Button);
     this->_window->draw(this->_B_Button);
+    this->_window->draw(this->_L_Button);
     this->_window->draw(this->_display_Dur);
     this->_window->draw(this->_V_Up);
     this->_window->draw(this->_V_Dw);
@@ -55,6 +56,7 @@ void Tplai::render()
     this->_window->draw(this->_panel);
     this->_window->draw(this->_display_CurrM);
     this->_window->draw(this->_display_Dur);
+    this->_window->draw(this->_loop);
 
     for (size_t i = 0; i < volumeMax; i++)
     {
@@ -107,6 +109,26 @@ void Tplai::pollEvents()
             {
                 this->_currM.play();
                 this->_P_Button.setTexture(&this->P_Texture);
+            }
+            _isLeftMousePressed = true;
+            break;
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !_isLeftMousePressed &&
+            this->_L_Button.getGlobalBounds().contains(this->_mousePos)) {
+            if (this->_currM.getLoop())
+            {
+                this->_currM.setLoop(false);
+                this->_loop.setString("OFF");
+                this->_loop.setPosition(sf::Vector2f(this->_panel.getPosition().x + 336.0f,
+                    this->_panel.getPosition().y));
+            }
+            else
+            {
+                this->_currM.setLoop(true);
+                this->_loop.setString("ON");
+                this->_loop.setPosition(sf::Vector2f(this->_panel.getPosition().x + 340.0f,
+                    this->_panel.getPosition().y));
             }
             _isLeftMousePressed = true;
             break;
@@ -325,6 +347,15 @@ void Tplai::initPanel()
     this->_display_Dur.setOutlineColor(sf::Color::Black);
     this->_display_Dur.setPosition(sf::Vector2f(this->_panel.getPosition().x + 5.0f,
     this->_panel.getPosition().y + 65.0f));
+
+    this->_loop.setCharacterSize(25);
+    this->_loop.setFillColor(sf::Color::Black);
+    this->_loop.setFont(this->_font);
+    this->_loop.setOutlineThickness(0.5f);
+    this->_loop.setOutlineColor(sf::Color::Black);
+    this->_loop.setString("OFF");
+    this->_loop.setPosition(sf::Vector2f(this->_panel.getPosition().x + 336.0f,
+        this->_panel.getPosition().y));
 }
 
 void Tplai::initB()
@@ -340,6 +371,9 @@ void Tplai::initB()
     }
     if (!this->B_Texture.loadFromFile("source/back.png")) {
         std::cerr << "Cant load B_Texture\n";
+    }
+    if (!this->L_Texture.loadFromFile("source/loop.png")) {
+        std::cerr << "Cant load L_Texture\n";
     }
 
     this->_P_Button.setFillColor(sf::Color::White);
@@ -362,6 +396,15 @@ void Tplai::initB()
     this->_B_Button.setSize(sf::Vector2f(50.0f, 50.0f));
     this->_B_Button.setPosition(sf::Vector2f(this->_x - 105.0f, this->_y + 100.0f));
     this->_B_Button.setTexture(&this->B_Texture);
+
+
+    this->_L_Button.setFillColor(sf::Color::White);
+    this->_L_Button.setOutlineColor(sf::Color::Black);
+    this->_L_Button.setOutlineThickness(3.0f);
+    this->_L_Button.setSize(sf::Vector2f(35.0f, 35.0f));
+    this->_L_Button.setPosition(sf::Vector2f(this->_x + 190.0f, this->_y + 10.0f));
+    this->_L_Button.setTexture(&this->L_Texture);
+
 }
 
 void Tplai::initV()

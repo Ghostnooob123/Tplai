@@ -60,11 +60,13 @@ private:
 	sf::Font _font;
 	sf::Text _display_CurrM;
 	sf::Text _display_Dur;
+	sf::Text _loop;
 	std::string DisplayFix(std::string& _disFile);
 
 	sf::RectangleShape _P_Button; // Pause
 	sf::RectangleShape _N_Button; // Next
 	sf::RectangleShape _B_Button; // Back
+	sf::RectangleShape _L_Button; // Loop
 
 	sf::RectangleShape _panel;
 
@@ -77,7 +79,7 @@ private:
 	bool _back;
 	bool _isLeftMousePressed;
 
-	sf::Texture P_Texture, Pl_Texture, N_Texture, B_Texture;
+	sf::Texture P_Texture, Pl_Texture, N_Texture, B_Texture, L_Texture;
 	sf::Texture V_Up_Texture, V_Dw_Texture, Add_Texture, V_Mute_Texture;
 
 	void initWindow();
